@@ -1,0 +1,100 @@
+//minikube and nagios
+
+minikube version
+minikube start
+to confirm type: kubectl get nodes
+
+Create Nginx Deployment
+kubectl create deployment mynginx --image=nginx
+
+Verify Deployment
+kubectl get deployments
+
+Also check pods:
+
+kubectl get pods
+kubectl describe pods
+
+Expose Deployment as a Service
+Turn the deployment into a Service so you can access it.
+
+kubectl expose deployment mynginx --type=NodePort --port=80 --target-port=80
+
+Step 1: Delete the existing service
+kubectl delete svc mynginx
+
+Step 2: Recreate it correctly
+kubectl expose deployment mynginx --type=NodePort --port=80 --target-port=80
+
+Check service:
+kubectl get service mynginx
+kubectl scale deployment mynginx --replicas=4
+minikube tunnel dont do ctrl+c keave and open new terminal and type down command
+Get the service URL:
+minikube service mynginx --url copy and run in brower u get welcome page
+
+minikube dashboard
+
+Step 7: Stop and Clean Up
+7.1 Delete Deployment and Service
+kubectl delete deployment mynginx
+kubectl delete service mynginx if u want delete 
+
+kubectl expose deployment mynginx --type=NodePort --port=80 --target-port=80 --name=mynginx-service --node-port=8090 if they give to run on another port number 
+
+//nagios into docker
+
+pull docker image 
+docker pull jasonrivers/nagios:latest
+run and create
+docker run --name nagiosdemo -p 8888:80 jasonrivers/nagios:latest
+or in detached mode 
+docker run -d --name nagiosdemo -p 8888:80 jasonrivers/nagios:latest
+
+next docker ps
+You should see a container named nagiosdemo with PORTS like 0.0.0.0:8888->80.
+
+✅ Step 3: Access Nagios Dashboard
+Open browser:
+http://localhost:8888
+Login with:
+Username: nagiosadmin
+Password: nagios
+Inside Nagios, you can explore:
+Hosts → machines/services being monitored
+Services → checks like CPU, disk, HTTP, etc.
+Alerts → recent warnings/critical alerts
+✅ Step 4: View Host Details
+In the Nagios web UI, go to Hosts.
+Click on a host name (like localhost).
+You can now see:
+Host Status → UP / DOWN
+Metrics → CPU, memory, network (depending on checks configured)
+Actions → reschedule checks, disable notifications, schedule downtime, etc.
+
+to see the docker running type docker ps you see You’ll see nagiosdemo running and mapped to localhost:8888.
+
+//aws first login and do the process and then create a folder of aws and copy that shell and do and paste the ssh shell and then 
+
+sudo apt update
+sudo apt-get install docker.io
+sudo apt install git
+sudo apt install nano
+now go to aws folder and create an example folder in that create index.html and write some content
+on the example folder right click and select git bash 
+git init
+git add .
+git commit -m "first commit"
+create repository of aws copy each command after commit and do in git bash
+copy http path in code and in cmd type git clone url
+ls
+cd AWS(repository name)
+ls
+nano Dockerfile
+From nginx:alphine
+COPY . /usr/share/nginx/html and then ctrl+o ,enter ,ctrl+x
+sudo docker build -t mywebapp .
+sudo docker run -d -p 80:80 mywebapp
+go instance name and copy ipv4 address and then go to browser and type http://ipv4 address 
+
+
