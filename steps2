@@ -97,4 +97,26 @@ sudo docker build -t mywebapp .
 sudo docker run -d -p 80:80 mywebapp
 go instance name and copy ipv4 address and then go to browser and type http://ipv4 address 
 
+open ngrok website
+your authtoken -> command line -> show authtoken -> copy
 
+open ngrok app(opens in cmd)
+paste this copied one : ngrok config add-authtoken 35sQ76wrMHQ50ajPdIH6keHHzEd_73RS45k9uo2HScnpWDhut
+ngrok http 8080/1
+
+you will get a url(https://unpermeated-amada-uncloyed.ngrok-free.dev) copy it
+go to your GitHub repo
+settings -> webhooks -> add webhook -> payload url = https://unpermeated-amada-uncloyed.ngrok-free.dev/github-webhook/ , content type=application/json, Which events would you like to trigger this webhook? = Just the push event , active , Add Webhook
+
+open jenkins
+select the job(mavenjava_build) -> configure -> triggers = tick GitHub hook trigger for GITScm polling -> Save
+
+git bash
+git clone https://github.com/SindhuSri19/selab-internal
+cd selab-internal
+nano README.md -> make changes -> ctrl o -> enter -> ctrl x
+git add .
+git commit -m "msg"
+git push origin main
+
+jenkins -> build queue or mavenjava_build or pipeline view
