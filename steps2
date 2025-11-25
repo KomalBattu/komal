@@ -113,6 +113,10 @@ select the job(mavenjava_build) -> configure -> triggers = tick GitHub hook trig
 
 git bash
 git clone https://github.com/SindhuSri19/selab-internal
+
+FROM nginx:alpine
+COPY index.html /usr/share/nginx/html/index.html
+EXPOSE 80
 cd selab-internal
 nano README.md -> make changes -> ctrl o -> enter -> ctrl x
 git add .
