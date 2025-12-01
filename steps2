@@ -97,7 +97,7 @@ sudo docker build -t mywebapp .
 sudo docker run -d -p 80:80 mywebapp
 go instance name and copy ipv4 address and then go to browser and type http://ipv4 address 
 
-open ngrok website
+//ngrok and webhooks open ngrok website
 your authtoken -> command line -> show authtoken -> copy
 
 open ngrok app(opens in cmd)
@@ -124,3 +124,74 @@ git commit -m "msg"
 git push origin main
 
 jenkins -> build queue or mavenjava_build or pipeline view
+
+
+//docker-compose
+
+
+1.create a folder inside that create app.js
+const http = require('http');
+
+const port = 8080;
+
+const server = http.createServer((req, res) => {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('Hello from Docker container!\n');
+});
+
+server.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+--------------------
+2.in that folder create a Dockerfile
+code:
+# 1. Use Node.js base image
+FROM node:18
+
+# 2. Set working directory inside container
+WORKDIR /app
+
+# 3. Copy package files and install dependencies
+COPY package.json /app
+RUN npm install
+
+# 4. Copy the rest of the code
+COPY . /app
+
+# 5. Expose the port used by the app inside container
+EXPOSE 8080
+
+# 6. Command to start the app
+CMD ["npm", "start"]
+-------------------
+3.install npm init -y
+----------
+4.docker images
+---------
+5.docker run -p 9090:8080 myapp-image
+------------
+6.now open http://localhost:9090
+---------
+7.in the same folder create 
+docker-compose.yml
+code:
+version: "3.8"
+
+services:
+  myapp:
+    image: myapp-image
+    container_name: myapp-container
+    ports:
+      - "9090:8080"
+------------
+8.from the file explorer from folder open cmd run 
+dir
+docker compose up -d
+dir
+docker ps
+open port http:localhost:9090
+docker login
+docker images
+docker tag myapp-image username/myapp:latest
+docker images
+docker push username/myapp:latest
