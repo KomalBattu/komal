@@ -9,27 +9,71 @@ Source: My IP
 2.convert .pem to .ppk
 puttygen->load->in files keep option as all files->.pem->save private key->yes->filename.ppk
 
-3.open putty->hostname->ubuntu@publicipv4 address(copy from instance)->click connection->SSh->auth->credentials->browse->select .ppk ->open->connected->type whoami-.ec2 is connected
+3.open putty
+hostname->
+ubuntu@publicipv4 address(copy from instance)->
+click connection->
+SSh->
+auth->
+credentials->
+browse->
+select .ppk ->
+open->
+connected->
+type whoami-.ec2 is connected
 
-4.if u get any network error open created instance->security->security group link->inbound rules->edit->ssh->source->ipv4 and and do the putty process as step 3
+4.if u get any network error open created instance->
+security->
+security group link->
+inbound rules->
+edit->ssh->
+source->
+ipv4 and and do the putty process as step 3
 
-5.using created instance->in the top right click cloudshell icon->select EC2 instance->connect->copy ssh->paste in cloudshell->first it gets errorthen do->actions in cloudshell->upload file->select.pem file->again paste ssh command->if got it type whoami->if gets error ->ls->chmod 400 filename->paste again ssh->yes->whoami->ec2 is connected
+5.using created instance->
+in the top right click cloudshell icon->
+select EC2 instance->
+connect->
+copy ssh->
+paste in cloudshell->
+first it gets errorthen do->actions in cloudshell->
+upload file->select.pem file->
+again paste ssh command->
+if got it type whoami->
+if gets error ->
+ls->chmod 400 filename->
+paste again ssh->
+yes->whoami->
+ec2 is connected
 
-6.create again new instance->Select an Amazon Machine Image (AMI):Choose a Windows Server AMI (e.g., Windows Server 2019 or 2022)->t2.micro->key pair->network settings->security group->check RDP port 3389 and source as My IP->launch instance
+6.create again new instance->
+Select an Amazon Machine Image (AMI):Choose a Windows Server AMI (e.g., Windows Server 2019 or 2022)->
+t2.micro->key pair->
+network settings->security group->
+check RDP port 3389 and source as My IP->launch instance
 
-7.select instance->copy public DNS or public ipv4->click connect->RDP Client->Click Get Password->Upload your Key Pair (.pem) file->Click Decrypt Password->Copy the Administrator password shown 
+7.select instance->copy public DNS or public ipv4->
+click connect->RDP Client->Click Get Password->
+Upload your Key Pair (.pem) file->Click Decrypt Password->
+Copy the Administrator password shown 
 
-8.in windows->search Remote desktop connection->In the Computer field, enter the Public DNS->click connect->if the account is another click on more choices->use different account->Username: Administrator,passowrd: paste decrypted  password->click ok.[if u get any error go to selected instances->security-.security group link->edit inbound rules->add rule->custom(RDP)->custom type(anywhere Ipv4)-.save and again do the process]
-
-
+8.in windows->search Remote desktop connection->
+In the Computer field, enter the Public DNS->
+click connect->if the account is another click on more choices->use different account->
+Username: Administrator,passowrd: paste decrypted  password->
+click ok.[if u get any error go to selected instances->
+security-.security group link->edit inbound rules->
+add rule->custom(RDP)->custom type(anywhere Ipv4)-.save and again do the process]
 
 --------------------------------------------------------------------------------------------
-
 //EFS
-
 1.create 2 efs instances 
 
-2.launch instance->name as efs1->amazon linux->t2.micro->key pair->create security group->network->subnet-1a(us-east-1a)->description(NFS-SG)->add security group->type(NFS)->source type(anywhere)->click launch instance
+2.launch instance->
+name as efs1->amazon linux->t2.micro->
+key pair->create security group->network->
+subnet-1a(us-east-1a)->description(NFS-SG)->
+add security group->type(NFS)->source type(anywhere)->click launch instance
 
 3.launch instance->name as efs2->amazon linux->t2.micro->key pair->selct security group->select the selected one->click launch instance
 
