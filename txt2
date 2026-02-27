@@ -101,7 +101,7 @@ and in efs2 type ls you should get
 
 5.sudo mkdir /mnt/komal->sudo mount /dev/xvdf1 /mnt/komal->df -h
 
-6.sudo blkid /dev/xvdf1->copy the UUID=""->sudo nano /etc/fstab->at last line paste UUID="" /mnt/archana   xfs   defaults,nofail   0   0->sudo mount -a->df -h->cd /mnt/komal->sudo touch /mnt/komal/f1->ls
+6.sudo blkid /dev/xvdf1->copy the UUID=""->sudo nano /etc/fstab->at last line paste UUID="" /mnt/archana   ext4   defaults,nofail   0   0->sudo mount -a->df -h->cd /mnt/komal->sudo touch /mnt/komal/f1->ls
 
 7.if needed reboot or dont do it 
 
