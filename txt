@@ -1,0 +1,151 @@
+EC2 → PuTTY, CloudShell, RDP
+
+1. Create an instance → Ubuntu → t2.micro
+   Go to EC2 → Security Groups → Inbound rules
+   Ensure this rule exists:
+   Type: SSH
+   Port: 22
+   Source: My IP
+
+2. Convert .pem to .ppk
+   PuTTYgen → Load → Files type: All Files → Select .pem → Save private key → Yes → filename.ppk
+
+3. Open PuTTY
+   Hostname → ubuntu@PublicIPv4
+   Connection → SSH → Auth → Credentials → Browse → Select .ppk → Open
+   After connection, type: whoami → EC2 connected
+
+4. If network error occurs
+   Instance → Security → Security group → Inbound rules → Edit
+   SSH → Source → My IP
+   Repeat PuTTY connection
+
+5. CloudShell connection
+   Click CloudShell icon → Select EC2 instance → Connect
+   Copy SSH command → Paste in CloudShell
+   If error → Actions → Upload file → Upload .pem
+   Retry SSH → If error → ls → chmod 400 filename.pem → Retry SSH → whoami
+
+6. Create Windows instance
+   AMI → Windows Server 2019/2022 → t2.micro
+   Key pair → Network settings → Security group
+   Allow RDP (3389) → Source: My IP → Launch
+
+7. Connect to Windows instance
+   Copy Public DNS/IP → Connect → RDP Client → Get Password
+   Upload .pem → Decrypt → Copy Administrator password
+
+8. Remote Desktop
+   Open Remote Desktop → Enter Public DNS
+   Use different account → Username: Administrator → Paste password
+   If error → Security group → Add RDP rule → Anywhere IPv4 → Retry
+
+---
+
+EFS
+
+1. Create 2 EC2 instances
+
+2. Launch instance → Name: efs1 → Amazon Linux → t2.micro
+   Key pair → Create security group → Subnet: 1a
+   Add rule: NFS → Source: Anywhere → Launch
+
+3. Launch instance → Name: efs2 → Amazon Linux → t2.micro
+   Select same security group → Launch
+
+4. Search EFS → Create file system
+   Name optional → VPC default → Enable region
+   After creation → Network settings → Keep NFS SG → Save
+
+5. Open two PowerShell terminals
+   SSH into efs1 → sudo su → mkdir fs → yum install amazon-efs-utils
+   Repeat for efs2
+
+6. EFS → Select file system → Attach → Mount via DNS
+   Copy command → Run on both instances
+
+7. On efs1
+   cd directory → touch file.txt → echo "hello" > file.txt → ls
+   On efs2 → ls → file visible
+
+---
+
+EBS
+
+1. Create instance
+
+2. EC2 → Volumes → Create volume
+   Type: gp3 → Size: 20 GB → Same AZ → Create
+
+3. Select volume → Attach volume
+   Instance → Linux EC2 → Device: /dev/sdf → Attach
+
+4. SSH → lsblk → See /dev/xvdf
+   lsblk -fs → sudo fdisk /dev/xvdf → m → n → Enter → w
+   lsblk -fs → sudo mkfs.ext4 /dev/xvdf1
+
+5. sudo mkdir /mnt/komal
+   sudo mount /dev/xvdf1 /mnt/komal
+   df -h
+
+6. sudo blkid /dev/xvdf1
+   Copy UUID → sudo nano /etc/fstab
+   Add line: UUID=... /mnt/archana xfs defaults,nofail 0 0
+   sudo mount -a → df -h → touch file
+
+7. Reboot optional
+
+8. Detach volume → Attach to another instance → Mount again
+
+9. Snapshot creation
+   EC2 → Volumes → Actions → Create Snapshot → Name → Create
+
+10. Copy Snapshot
+    Select snapshot → Copy → Choose region → Copy
+
+11. Monitor snapshot status
+
+12. Destination region → Snapshots → Create Volume → Attach
+
+13. Attach volume → Mount on instance
+
+---
+
+VPC
+
+1. VPC → Create VPC → VPC only
+   Name: Custom VPC → CIDR: 10.0.0.0/16
+
+2. Subnets
+   Public: 10.0.2.0/24
+   Private: 10.0.1.0/24
+   Enable auto public IP for public subnet
+
+3. Internet Gateway
+   Create → Attach to VPC
+
+4. Route Tables
+   Public RT → 0.0.0.0/0 → IGW → Associate public subnet
+   Private RT → Associate private subnet
+
+5. Launch EC2
+   Public → Public subnet → HTTP/HTTPS allowed
+   Private → Private subnet
+
+6. SSH → ping google.com
+
+---
+
+VPC using NAT Gateway
+
+1. Elastic IP → Create
+   NAT Gateway → Create → Public subnet → Attach EIP
+
+2. Private Route Table
+   Add route: 0.0.0.0/0 → NAT Gateway
+
+3. SCP private key to bastion
+   scp -i public.pem private.pem ubuntu@PublicIP:/home/ubuntu/
+
+4. Bastion SSH → chmod 400 private.pem
+   SSH to private instance → ping google.com
